@@ -1,0 +1,55 @@
+@import "./normalize.css";
+
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body,
+html {
+  font-family: Arial, "Microsoft YaHei", sans-serif;
+  width: 100%;
+  height: 100%;
+  user-select: none;
+  color: #666666;
+  background: #ffffff;
+  -webkit-tap-highlight-color: transparent;
+}
+#app {
+  width: 100%;
+  height: 100%;
+}
+a {
+  text-decoration: none;
+  color: #666666;
+}
+
+.clear-fix:after {
+  font-size: 0;
+  display: block;
+  clear: both;
+  height: 0;
+  content: "";
+}
+
+.arrow-right {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-left: 0.1rem;
+  transform: rotate(135deg);
+  border-top: 1px solid #999999;
+  border-left: 1px solid #999999;
+  background-color: transparent;
+}
+
+.left {
+  float: left;
+}
+
+.right {
+  float: right;
+}
+
