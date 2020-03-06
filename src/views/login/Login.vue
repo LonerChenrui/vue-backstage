@@ -1,52 +1,110 @@
 <template>
   <div id="login">
-    <div class="go-login-but">
+    <div class="go-login-but" @click="isShow = !isShow">
       <el-row>
         <el-button size="small">Sign in</el-button>
       </el-row>
     </div>
-    <div class="login-box">
-      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" class="demo-ruleForm">
-        <el-form-item prop="userName">
-          <el-input 
-            v-model="ruleForm.userName" 
-            prefix-icon="el-icon-user-solid"
-          >
-          </el-input>
-        </el-form-item>
-        <el-form-item prop="password">
-          <el-input 
-            prefix-icon="el-icon-lock"
-            v-model="ruleForm.password" 
-            show-password
-          >
-          </el-input>
-        </el-form-item>
-        <el-form-item class="itme-margin">
-          <el-button size="mini" type="primary">Login</el-button>
-          <el-button size="mini">重置</el-button>
-        </el-form-item>
-      </el-form>  
-    </div>
+    <transition 
+      enter-active-class="animated  zoomInLeft" 
+      leave-active-class="animated zoomOut"
+    >
+      <div class="login-box" v-show="isShow">
+        <el-form :model="loginForm" :rules="loginFromRules" ref="loginForm" status-icon>
+          <el-form-item prop="username">
+            <el-input 
+              v-model="loginForm.username" 
+              prefix-icon="el-icon-user-solid"
+            >
+            </el-input>
+          </el-form-item>
+          <el-form-item prop="password">
+            <el-input 
+              prefix-icon="el-icon-lock"
+              v-model="loginForm.password" 
+              show-password
+            >
+            </el-input>
+          </el-form-item>
+          <el-form-item class="itme-margin">
+            <el-button size="mini" type="primary" @click="login">Login</el-button>
+            <el-button size="mini" @click="resetFields">重置</el-button>
+          </el-form-item>
+        </el-form>  
+      </div>
+    </transition>
   </div>
 </template>
 
 <script>
+import HttpRequest from '@/network/request'
+import { login } from '@/network/login'
 export default {
   name: "",
   data() {
     return {
-      ruleForm: {
-        userName: 'admin',
+      // 登录表单数据对象
+      loginForm: {
+        username: 'admin',
         password: '123456'
       },
-      rules: {
-
-      }
+      // 登录表单验证规则对象
+      loginFromRules: {
+        username: [
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' },
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { min: 6, max: 10, message: '长度在 6 到 10 个字符', trigger: 'blur' }
+        ]
+      },
+      isShow: true
     }
   },
   components:{ },
   props:{ },
+  methods: {
+    // 登录
+    login() {
+      this.$refs.loginForm.validate((valid) => {
+        // 校验成功
+        if(valid) {
+          login(this.loginForm).then(res => {
+            // 登录成功
+            if(res.meta.status == 200) {
+              // 成功处理业务逻辑
+              console.log(res)
+              this.$message({
+                message: res.meta.msg,
+                type: 'success'
+              });
+            }else {
+              this.$message({
+                message: res.meta.msg,
+                type: 'warning'
+              });
+            }
+          }).catch(error => {
+
+          })
+        }else {
+          this.$message({
+            message: '请填写正确的用户名和密码',
+            type: 'warning'
+          }); 
+        }
+      })
+    },
+    // 重置操作
+    resetFields() {
+      this.$refs.loginForm.resetFields();
+      this.$message({
+        message: '重置成功',
+        type: 'success'
+      });
+    }
+  }
 }
 </script>
 <style scoped lang="less">
@@ -68,8 +126,7 @@ export default {
     left: 50%;
     top: 50%;
     transform: translate(-50%,-50%);
-    background-color:rgba(0,0,0,0.3);
-    // opacity: 0.7;
+    background-color:rgba(0,0,0,0.2);
     border-radius: 10px;
      min-width: 380px;
     .itme-margin {
@@ -77,7 +134,8 @@ export default {
       text-align: right;
     }
   }
+  ::v-deep .el-form-item__error {
+    color: red;
+  }
 }  
-
-
 </style>

@@ -5,8 +5,10 @@ import store from './store'
 
 import './plugins/element.js'
 
-
 import '@/assets/css/base.css'
+import animated from 'animate.css' 
+Vue.use(animated)
+
 
 Vue.config.productionTip = false
 
