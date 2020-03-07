@@ -1,5 +1,5 @@
 import axios from 'axios'
-
+import { Loading } from 'element-ui';
 class HttpRequest {
   constructor (baseUrl) {
     // 接口基准地址
@@ -16,9 +16,10 @@ class HttpRequest {
   // 请求和响应拦截
   interceptors (instance, url) {											
     // 请求拦截
+    let loadingInstance = null;
     instance.interceptors.request.use(config => {							
       // 添加全局的loading...
-      
+      // loadingInstance = Loading.service();
       //需要授权的 API ，必须在请求头中使用 `Authorization` 字段提供 `token` 令牌
       // config.headers['Authorization'] = token 
       
@@ -32,6 +33,11 @@ class HttpRequest {
       // if (res.status !== 200 && res.status !== 201 && res.status !== 202 && res.status !== 204) {
 			//   
       // }
+
+      // 以服务的方式调用的 Loading 需要异步关闭
+      // this.$nextTick(() => {
+      //   loadingInstance.close();
+      // });
       return Promise.resolve(res.data)
     },error => {
       // 这里根据错误状态码进行路由跳转，比如没有权限跳转到登录界面，500错误跳转到服务器错误界面

@@ -40,7 +40,7 @@
 import HttpRequest from '@/network/request'
 import { login } from '@/network/login'
 export default {
-  name: "",
+  name: "login",
   data() {
     return {
       // 登录表单数据对象
@@ -73,8 +73,12 @@ export default {
           login(this.loginForm).then(res => {
             // 登录成功
             if(res.meta.status == 200) {
-              // 成功处理业务逻辑
               console.log(res)
+              // 存储token
+              sessionStorage.setItem('token',res.data.token);
+              // 跳转首页
+              this.$router.push('/home')
+
               this.$message({
                 message: res.meta.msg,
                 type: 'success'
