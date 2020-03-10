@@ -2,7 +2,7 @@
   <div id="login">
     <div class="go-login-but" @click="isShow = !isShow">
       <el-row>
-        <el-button size="small">Sign in</el-button>
+        <el-button size="small">go Login</el-button>
       </el-row>
     </div>
     <transition 
@@ -81,12 +81,14 @@ export default {
 
               this.$message({
                 message: res.meta.msg,
-                type: 'success'
+                type: 'success',
+                duration: 2000
               });
             }else {
               this.$message({
                 message: res.meta.msg,
-                type: 'warning'
+                type: 'warning',
+                duration: 2000
               });
             }
           }).catch(error => {
@@ -95,7 +97,8 @@ export default {
         }else {
           this.$message({
             message: '请填写正确的用户名和密码',
-            type: 'warning'
+            type: 'warning',
+            duration: 2000
           }); 
         }
       })
