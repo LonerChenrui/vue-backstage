@@ -73,7 +73,6 @@ export default {
           login(this.loginForm).then(res => {
             // 登录成功
             if(res.meta.status == 200) {
-              console.log(res)
               // 存储token
               sessionStorage.setItem('token',res.data.token);
               // 跳转首页

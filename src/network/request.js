@@ -16,13 +16,13 @@ class HttpRequest {
   // 请求和响应拦截
   interceptors (instance, url) {											
     // 请求拦截
-    let loadingInstance = null;
+   
     instance.interceptors.request.use(config => {							
       // 添加全局的loading...
-      // loadingInstance = Loading.service();
-      //需要授权的 API ，必须在请求头中使用 `Authorization` 字段提供 `token` 令牌
-      // config.headers['Authorization'] = token 
       
+      //需要授权的 API ，必须在请求头中使用 `Authorization` 字段提供 `token` 令牌
+      config.headers['Authorization'] = sessionStorage.getItem('token');
+
       return config
     }, error => {
       return Promise.reject(error)
