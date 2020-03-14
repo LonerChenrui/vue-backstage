@@ -26,7 +26,7 @@ export default {
   name: "home",
   data() {
     return {
-      width: '80px'
+      width: '200px'
     }
   },
   components:{ 
