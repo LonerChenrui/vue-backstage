@@ -2,6 +2,7 @@ import Vue from 'vue'
 import {
   Button,
   Row,
+  Col,
   Form,
   FormItem,
   Input,
@@ -14,12 +15,22 @@ import {
   Submenu,
   MenuItem,
   RadioButton,
-  RadioGroup
+  RadioGroup,
+  Breadcrumb,
+  BreadcrumbItem,
+  Card,
+  Table,
+  TableColumn,
+  Pagination,
+  Switch,
+  Dialog,
+  MessageBox
   
 } from 'element-ui'
 
 Vue.use(Button)
 Vue.use(Row)
+Vue.use(Col)
 Vue.use(Form)
 Vue.use(FormItem)
 Vue.use(Input)
@@ -32,9 +43,18 @@ Vue.use(Submenu)
 Vue.use(MenuItem)
 Vue.use(RadioButton)
 Vue.use(RadioGroup)
+Vue.use(Breadcrumb)
+Vue.use(BreadcrumbItem)
+Vue.use(Card)
+Vue.use(Table)
+Vue.use(TableColumn)
+Vue.use(Pagination)
+Vue.use(Switch)
+Vue.use(Dialog)
 
-
-
-
-// element中的Message需要全局配置才可使用
+// Message需要全局配置才可使用
 Vue.prototype.$message = Message
+
+// MessageBox需要在Vue的原型对象上挂载
+Vue.prototype.$confirm = MessageBox.confirm
+

@@ -4,6 +4,7 @@ import router from './router'
 import store from './store'
 
 import './plugins/element.js'
+import 'element-ui/lib/theme-chalk/display.css';
 
 import '@/assets/css/base.css'
 import animated from 'animate.css' 

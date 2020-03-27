@@ -65,9 +65,7 @@ export default {
     getAsideMenuList() {
       getAsideMenuList()
         .then(res => {
-          console.log(res);
           if (res.meta.status == 200) {
-            console.log(this.$router)
             this.asideMenuList = res.data;
           } else {
             this.$message({
