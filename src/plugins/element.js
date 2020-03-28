@@ -24,7 +24,8 @@ import {
   Pagination,
   Switch,
   Dialog,
-  MessageBox
+  MessageBox,
+  Tag
   
 } from 'element-ui'
 
@@ -51,6 +52,7 @@ Vue.use(TableColumn)
 Vue.use(Pagination)
 Vue.use(Switch)
 Vue.use(Dialog)
+Vue.use(Tag)
 
 // Message需要全局配置才可使用
 Vue.prototype.$message = Message

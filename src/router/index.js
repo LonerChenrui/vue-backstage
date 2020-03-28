@@ -6,7 +6,7 @@ const Login = () => import('@/views/login/Login.vue')
 const Home = () => import('@/views/home/Home.vue')
 const HomeMain = () => import('@/views/home/children/HomeMain.vue')
 const Users = () => import('@/views/users/userList/UserList.vue')
-
+const PowerList = () => import('@/views/power/powerList/PowerList.vue')
 const routes = [
   {
     path: '/',
@@ -24,7 +24,8 @@ const routes = [
     redirect: '/homemain',
     children: [
       { path: '/homemain', name: 'homemain', component: HomeMain },
-      { path: '/users', name: 'users', component: Users }
+      { path: '/users', name: 'users', component: Users },
+      { path: '/rights', name: 'rights', component: PowerList }
     ]
   }
 ]

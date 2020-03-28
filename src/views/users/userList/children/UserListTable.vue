@@ -323,9 +323,6 @@ export default {
 };
 </script>
 <style scoped lang="less">
-.el-card {
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15) !important;
-}
 .userSearch {
   margin-bottom: 20px;
 }
