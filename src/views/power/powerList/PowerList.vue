@@ -4,8 +4,8 @@
     <user-breadcrumb :breadcrumbTitle="breadcrumbTitle" />
 
     <!-- 权限列表 -->
-    <el-table :data="powerListData" border stripe style="width: 100%">
-      <el-table-column fixed="left" type="index" index="1" width="120" align="center"></el-table-column>
+    <el-table :data="powerListData" border stripe style="width: 100%" height="calc(100vh - 140px)">
+      <el-table-column fixed="left" type="index" width="120" align="center"></el-table-column>
       <el-table-column prop="authName" label="权限名称" width="150" align="center"></el-table-column>
       <el-table-column prop="path" label="路径" width="150" align="center"></el-table-column>
       <el-table-column prop="level" label="权限等级" width="150" align="center">

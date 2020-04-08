@@ -7,6 +7,8 @@ const Home = () => import('@/views/home/Home.vue')
 const HomeMain = () => import('@/views/home/children/HomeMain.vue')
 const Users = () => import('@/views/users/userList/UserList.vue')
 const PowerList = () => import('@/views/power/powerList/PowerList.vue')
+const Roles = () => import('@/views/power/roles/Roles.vue')
+
 const routes = [
   {
     path: '/',
@@ -25,7 +27,8 @@ const routes = [
     children: [
       { path: '/homemain', name: 'homemain', component: HomeMain },
       { path: '/users', name: 'users', component: Users },
-      { path: '/rights', name: 'rights', component: PowerList }
+      { path: '/rights', name: 'rights', component: PowerList },
+      { path: '/roles', name: 'roles', component: Roles }
     ]
   }
 ]
@@ -36,6 +39,7 @@ const router = new VueRouter({
   routes
 })
 
+// 问题收集
 // 通过导航守卫控制访问权限（全局导航守卫、路由独享守卫、组件内守卫）
 // 如果用户没有登录，是通过URL访问指定页面，需要重新导航到登录页
 
