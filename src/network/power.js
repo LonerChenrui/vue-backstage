@@ -1,9 +1,17 @@
 import Axios from './request'
 
-// 权限列表
+// list 列表显示权限
 export function getPowerList() {
   return Axios.request({
     url: '/rights/list',
+    method: 'get',
+  })
+}
+
+//  tree 树状显示权限
+export function getTreeRights() {
+  return Axios.request({
+    url: '/rights/tree',
     method: 'get',
   })
 }

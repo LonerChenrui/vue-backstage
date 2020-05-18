@@ -25,7 +25,8 @@ import {
   Switch,
   Dialog,
   MessageBox,
-  Tag
+  Tag,
+  Tree
   
 } from 'element-ui'
 
@@ -53,6 +54,7 @@ Vue.use(Pagination)
 Vue.use(Switch)
 Vue.use(Dialog)
 Vue.use(Tag)
+Vue.use(Tree)
 
 // Message需要全局配置才可使用
 Vue.prototype.$message = Message

@@ -63,21 +63,55 @@
           <template>
             <el-button type="primary" size="mini" icon="el-icon-edit"></el-button>
             <el-button type="danger" size="mini" icon="el-icon-delete"></el-button>
-            <el-button type="warning" size="mini" icon="el-icon-setting"></el-button>
+            <el-button
+              type="warning"
+              size="mini"
+              icon="el-icon-setting"
+              @click="allocationJurisdiction()"
+            ></el-button>
           </template>
         </el-table-column>
       </el-table>
     </el-card>
+
+    <!-- 分配权限 -->
+    <el-dialog title="分配权限" :visible.sync="qxDialogVisible" width="60%">
+      <el-tree
+        :data="allRights"
+        :props="rightsTreeProps"
+        show-checkbox
+        node-key="id"
+        default-expand-all
+        highlight-current
+        :default-checked-keys="[]"
+      ></el-tree>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="qxDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="qxDialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
-</template>
+</template> 
 
 <script>
-import { jurisdictionDelete } from "@/network/power";
+import { jurisdictionDelete, getTreeRights } from "@/network/power";
 export default {
   name: "rolesList",
   data() {
     return {
+      // 角色列表
       rolesListTableData: [],
+      // 分配权限弹框状态
+      qxDialogVisible: false,
+      // 所有权限列表
+      allRights: [],
+      // tree配置项
+      rightsTreeProps: {
+        // 显示的文本
+        label: "authName",
+        // 哪个属性用于节点之间嵌套
+        children: "children"
+      }
     };
   },
   components: {},
@@ -93,6 +127,7 @@ export default {
   created() {},
   mounted() {},
   methods: {
+    // 删除指定权限
     jurisdictionDelete(row, rightId) {
       this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
         confirmButtonText: "确定",
@@ -101,19 +136,32 @@ export default {
       })
         .then(async () => {
           const result = await jurisdictionDelete(row.id, rightId);
-          console.log(result)
-          if(result.meta.status === 200) {
+          console.log(result);
+          if (result.meta.status === 200) {
             // 返回的data, 是当前角色下最新的权限数据，用于熟悉权限
             row.children = result.data;
             this.$message.success(result.meta.msg);
-          }else {
-            this.$message.error(result.meta.msg)
+          } else {
+            this.$message.error(result.meta.msg);
           }
         })
         .catch(() => {
-          this.$message.info("已取消删除")
+          this.$message.info("已取消删除");
         });
+    },
+    // 分配权限
+    async allocationJurisdiction() {
+      console.log(1111111111);
+      this.qxDialogVisible = true;
+      const result = await getTreeRights();
+      if (result.meta.status !== 200) {
+        return this.$message.error(result.meta.msg);
+      }
+      this.allRights = result.data;
+      console.log(result);
+      
     }
+    
   },
   watch: {
     // 问题收集
