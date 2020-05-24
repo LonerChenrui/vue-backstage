@@ -60,14 +60,14 @@
         <el-table-column prop="roleName" label="角色名称" align="center" show-overflow-tooltip></el-table-column>
         <el-table-column prop="roleDesc" label="角色描述" align="center" show-overflow-tooltip></el-table-column>
         <el-table-column fixed="right" label="操作" align="center">
-          <template>
+          <template slot-scope="{row}">
             <el-button type="primary" size="mini" icon="el-icon-edit"></el-button>
             <el-button type="danger" size="mini" icon="el-icon-delete"></el-button>
             <el-button
               type="warning"
               size="mini"
               icon="el-icon-setting"
-              @click="allocationJurisdiction()"
+              @click="allocationJurisdiction(row)"
             ></el-button>
           </template>
         </el-table-column>
@@ -83,7 +83,7 @@
         node-key="id"
         default-expand-all
         highlight-current
-        :default-checked-keys="[]"
+        :default-checked-keys="defaultCheckedKeys"
       ></el-tree>
       <span slot="footer" class="dialog-footer">
         <el-button @click="qxDialogVisible = false">取 消</el-button>
@@ -111,7 +111,9 @@ export default {
         label: "authName",
         // 哪个属性用于节点之间嵌套
         children: "children"
-      }
+      },
+      // 默认选择已有权限
+      defaultCheckedKeys: []
     };
   },
   components: {},
@@ -138,7 +140,7 @@ export default {
           const result = await jurisdictionDelete(row.id, rightId);
           console.log(result);
           if (result.meta.status === 200) {
-            // 返回的data, 是当前角色下最新的权限数据，用于熟悉权限
+            // 返回的data, 是当前角色下最新的权限数据，用于刷新权限
             row.children = result.data;
             this.$message.success(result.meta.msg);
           } else {
@@ -150,18 +152,26 @@ export default {
         });
     },
     // 分配权限
-    async allocationJurisdiction() {
-      console.log(1111111111);
+    async allocationJurisdiction(node) {
       this.qxDialogVisible = true;
       const result = await getTreeRights();
       if (result.meta.status !== 200) {
         return this.$message.error(result.meta.msg);
       }
       this.allRights = result.data;
-      console.log(result);
-      
-    }
-    
+      this.defaultCheckedKeys = [];
+      this.rowHaveRights(node);
+    },
+    // 递归获取最后一层的权限
+    rowHaveRights(node) {
+      console.log(node, "总数据,用于测用递归");
+      if (!node.children) {
+        return this.defaultCheckedKeys.push(node.id);
+      }
+      node.children.forEach(value => {
+        this.rowHaveRights(value);
+      });
+    },
   },
   watch: {
     // 问题收集
