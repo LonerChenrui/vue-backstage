@@ -4,7 +4,7 @@
     <user-breadcrumb :breadcrumbTitle="breadcrumbTitle" />
 
     <!-- 角色列表 -->
-    <roles-list :rolesListData="rolesListData" />
+    <roles-list :rolesListData="rolesListData" @refreshRolesList="refreshRolesList" />
   </div>
 </template>
 
@@ -38,7 +38,10 @@ export default {
         return this.$message.error(res.meta.msg);
       }
       this.rolesListData = res.data;
-      // console.log(res);
+    },
+    // 刷新角色列表
+    refreshRolesList() {
+      this.getRolesList();
     }
   }
 };

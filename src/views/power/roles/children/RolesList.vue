@@ -77,6 +77,7 @@
     <!-- 分配权限 -->
     <el-dialog title="分配权限" :visible.sync="qxDialogVisible" width="60%">
       <el-tree
+        ref="rightsRef"
         :data="allRights"
         :props="rightsTreeProps"
         show-checkbox
@@ -87,14 +88,14 @@
       ></el-tree>
       <span slot="footer" class="dialog-footer">
         <el-button @click="qxDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="qxDialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="roleRights()">确 定</el-button>
       </span>
     </el-dialog>
   </div>
 </template> 
 
 <script>
-import { jurisdictionDelete, getTreeRights } from "@/network/power";
+import { jurisdictionDelete, getTreeRights, roleRights } from "@/network/power";
 export default {
   name: "rolesList",
   data() {
@@ -113,7 +114,9 @@ export default {
         children: "children"
       },
       // 默认选择已有权限
-      defaultCheckedKeys: []
+      defaultCheckedKeys: [],
+      // 当前列表（行）数据
+      row: ''
     };
   },
   components: {},
@@ -151,8 +154,9 @@ export default {
           this.$message.info("已取消删除");
         });
     },
-    // 分配权限
+    // 获取已有的权限
     async allocationJurisdiction(node) {
+      this.row = node;
       this.qxDialogVisible = true;
       const result = await getTreeRights();
       if (result.meta.status !== 200) {
@@ -160,11 +164,11 @@ export default {
       }
       this.allRights = result.data;
       this.defaultCheckedKeys = [];
+      console.log(node, "总数据,用于测用递归");
       this.rowHaveRights(node);
     },
     // 递归获取最后一层的权限
     rowHaveRights(node) {
-      console.log(node, "总数据,用于测用递归");
       if (!node.children) {
         return this.defaultCheckedKeys.push(node.id);
       }
@@ -172,6 +176,23 @@ export default {
         this.rowHaveRights(value);
       });
     },
+    // 角色授权
+    roleRights() {
+      // 获取已选中的节点id
+      let rids = [
+        ...this.$refs.rightsRef.getCheckedKeys(),
+        ...this.$refs.rightsRef.getHalfCheckedKeys()
+      ].join(','); 
+      
+      roleRights(this.row.id,rids).then(result => {
+        if(result.meta.status !== 200) {
+          return this.$message.error(result.meta.msg);
+        }
+        this.$emit('refreshRolesList');
+        this.$message.success(result.meta.msg);
+        this.qxDialogVisible = false;
+      });
+    }
   },
   watch: {
     // 问题收集

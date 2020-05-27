@@ -31,3 +31,14 @@ export function jurisdictionDelete(roleId, rightId) {
     method: 'delete',
   })
 }
+
+// 角色授权
+export function roleRights(roleId,rids) {
+  return Axios.request({
+    url: `roles/${roleId}/rights`,
+    method: 'post',
+    data: {
+      rids
+    }
+  })
+}
