@@ -51,7 +51,12 @@
                 size="mini"
                 icon="el-icon-delete"
               ></el-button>
-              <el-button type="warning" size="mini" icon="el-icon-setting"></el-button>
+              <el-button
+                type="warning"
+                size="mini"
+                icon="el-icon-setting"
+                @click="allocationRole(scope.row)"
+              ></el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -102,6 +107,36 @@
         <el-button type="primary" @click="submitAddUserForm">确 定</el-button>
       </span>
     </el-dialog>
+
+    <!-- 分配角色 -->
+    <el-dialog title="分配角色" :visible.sync="allocationRoleDialog" width="60%">
+      <div>
+        <div>
+          <el-form ref="newRoleRef" :model="newRoleData" label-width="100px" label-position="left">
+            <el-form-item label="当前用户：" prop="name">
+              <el-input v-model="newRoleData.username" disabled></el-input>
+            </el-form-item>
+            <el-form-item label="当前的角色：" prop="name">
+              <el-input v-model="newRoleData.role_name" disabled></el-input>
+            </el-form-item>
+            <el-form-item label="分配新角色：">
+              <el-select v-model="newRoleData.newRoleSelectVal" placeholder="请选择">
+                <el-option
+                  v-for="item in newRoleSelect"
+                  :key="item.id"
+                  :label="item.roleName"
+                  :value="item.id"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-form>
+        </div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="allocationRoleDialog = false">取 消</el-button>
+        <el-button type="primary" @click="allocationRoleDialog = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -111,7 +146,8 @@ import {
   alterUserState,
   addUser,
   editorUser,
-  deleteUser
+  deleteUser,
+  getNsewRoleSelect
 } from "@/network/user";
 export default {
   name: "userListTable",
@@ -131,6 +167,19 @@ export default {
     };
 
     return {
+      // 分配新角色form
+      newRoleData: {
+        // 当前用户
+        username: "",
+        // 当前的角色
+        role_name: "",
+        // 分配新角色options值
+        newRoleSelectVal: ""
+      },
+      // 分配角色下拉框
+      newRoleSelect: [],
+      // 分配角色dialog
+      allocationRoleDialog: false,
       // 用户添加、编辑弹框标题
       elDialogTitle: "添加用户",
       // 用户列表数据
@@ -318,6 +367,22 @@ export default {
             message: "已取消删除"
           });
         });
+    },
+    // 分配角色
+    allocationRole(row) {
+      this.newRoleData.username = row.username
+      this.newRoleData.role_name = row.role_name
+      this.getNsewRoleSelect();
+      this.allocationRoleDialog = true;
+
+    },
+
+    // 分配角色下拉框
+    getNsewRoleSelect() {
+      getNsewRoleSelect().then(res => {
+        if (res.meta.status != 200) return this.$message.error(res.meta.msg);
+        this.newRoleSelect = res.data;
+      });
     }
   }
 };

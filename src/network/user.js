@@ -42,3 +42,11 @@ export function deleteUser(id) {
     data: id
   })
 }
+// 分配角色下拉框
+export function getNsewRoleSelect(payload) {
+  return Axios.request({
+    url: '/roles',
+    method: 'get',
+    data: payload
+  })
+}
