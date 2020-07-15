@@ -8,6 +8,7 @@ const HomeMain = () => import('@/views/home/children/HomeMain.vue')
 const Users = () => import('@/views/users/userList/UserList.vue')
 const PowerList = () => import('@/views/power/powerList/PowerList.vue')
 const Roles = () => import('@/views/power/roles/Roles.vue')
+const Categories = () => import('@/views/cate/categories/categories.vue')
 
 const routes = [
   {
@@ -28,7 +29,8 @@ const routes = [
       { path: '/homemain', name: 'homemain', component: HomeMain },
       { path: '/users', name: 'users', component: Users },
       { path: '/rights', name: 'rights', component: PowerList },
-      { path: '/roles', name: 'roles', component: Roles }
+      { path: '/roles', name: 'roles', component: Roles },
+      { path: '/categories', name: 'categories', component: Categories }
     ]
   }
 ]
