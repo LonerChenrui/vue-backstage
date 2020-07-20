@@ -4,7 +4,7 @@
     <user-breadcrumb :breadcrumbTitle="breadcrumbTitle" />
 
     <!-- 商品分类列表 -->
-    <tree-table :data="treeTableDate" :columns="treeTableColumns" />
+    <!-- <tree-table :data="treeTableDate" :columns="treeTableColumns" /> -->
 
     <!-- 商品分类分页 -->
   </div>
@@ -21,9 +21,27 @@ export default {
       // 商品分类面包屑标题
       breadcrumbTitle: ["商品管理", "商品分类"],
       // 商品分类列表数据
-      treeTableDate: [],
+      treeTableDate: [
+        // {name: 1,age:2}
+      ],
       // 商品分类列配置
-      treeTableColumns: []
+      treeTableColumns: [
+        //  {
+        //     label: '名称',
+        //      prop: 'name',
+        //  },
+        //  {
+        //     label: '性别',
+        //      prop: 'age',
+        //  }
+      ],
+      // 初始化查询列表条件
+      queryInfo: {
+        pagenum: 1,
+        pagesize: 5,
+        type: 3
+      },
+      // 总条数
     };
   },
   components: {
@@ -35,9 +53,9 @@ export default {
   },
   methods: {
     getCateGoriesList() {
-      getCateGoriesList().then(res => {
-        console.log(res,'商品分类')
-      })
+      getCateGoriesList(this.queryInfo).then(res => {
+        console.log(res)
+      });
     }
   }
 };

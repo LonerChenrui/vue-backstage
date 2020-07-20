@@ -9,7 +9,7 @@ class HttpRequest {
   getInsideConfig () {														
     const config = {													
       baseURL: this.baseUrl,
-      timeout: 3000
+      timeout: 20000
     }
     return config
   }
