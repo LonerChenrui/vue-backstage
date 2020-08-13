@@ -3,6 +3,11 @@
     <!-- 商品分类面包屑 -->
     <user-breadcrumb :breadcrumbTitle="breadcrumbTitle" />
 
+    <!-- 添加 -->
+    <div>
+      <el-button type="primary" size="small" style="margin:10px 0">添加分类</el-button>
+    </div>
+
     <!-- 商品分类列表 -->
     <tree-table
       :data="treeTableDate"
@@ -88,7 +93,7 @@ export default {
       // 初始化查询列表条件
       queryInfo: {
         pagenum: 1,
-        pagesize: 4,
+        pagesize: 2,
         type: 3,
       },
       // 总条数
