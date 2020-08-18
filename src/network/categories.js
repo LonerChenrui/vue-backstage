@@ -8,3 +8,13 @@ export function getCateGoriesList(payload) {
     params: payload
   })
 }
+
+// 保存分类
+export function saveCategories(payload) {
+  return Axios.request({
+    url: 'categories',
+    method: 'post',
+    data: payload
+  })
+}
+

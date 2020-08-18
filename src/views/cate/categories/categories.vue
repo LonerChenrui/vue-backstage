@@ -70,13 +70,18 @@
           </el-form-item>
 
           <el-form-item label="父级分类">
-            <el-cascader v-model="pitchOnValue" :options="parentTypeData" :props="cascaderProps"></el-cascader>
+            <el-cascader
+              v-model="pitchOnValue"
+              :options="parentTypeData"
+              :props="cascaderProps"
+              @change="handleChange"
+            ></el-cascader>
           </el-form-item>
         </el-form>
       </div>
       <span slot="footer">
         <el-button @click="handleClose">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="saveCategories">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -85,7 +90,7 @@
 <script>
 import UserBreadcrumb from "@/components/content/breadcrumb/Breadcrumb";
 
-import { getCateGoriesList } from "@/network/categories.js";
+import { getCateGoriesList, saveCategories } from "@/network/categories.js";
 export default {
   name: "categories",
   data() {
@@ -128,8 +133,12 @@ export default {
       dialogVisible: false,
       // 添加分类From数据
       addGoodsData: {
+        // 分类父 ID
+        cat_pid: 0,
         // 分类名称
         cat_name: "",
+        // 分类层级
+        cat_level: 0,
       },
       // 添加分类From验证规则
       addGoodsRules: {
@@ -200,6 +209,29 @@ export default {
     // 关闭商品分类弹框
     handleClose() {
       this.dialogVisible = false;
+    },
+    // 当选中的分类数据发生改变时触发
+    handleChange() {
+      console.log(this.pitchOnValue);
+      if (this.pitchOnValue.length == 0) {
+        this.addGoodsData.cat_pid = 0;
+        this.addGoodsData.cat_level = 0;
+      } else {
+        this.addGoodsData.cat_pid = this.pitchOnValue[
+          this.pitchOnValue.length - 1
+        ];
+        this.addGoodsData.cat_level = this.pitchOnValue.length;
+      }
+    },
+    // 保存分类
+    async saveCategories() {
+      const res = await saveCategories(this.addGoodsData);
+      if (res.meta.status !== 201) {
+        return this.$message.error(res.meta.msg);
+      }
+      this.dialogVisible = false;
+      this.getCateGoriesList();
+      this.$message.success(res.meta.msg);
     },
   },
 };
