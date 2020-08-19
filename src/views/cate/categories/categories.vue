@@ -147,7 +147,7 @@ export default {
           { min: 1, max: 6, message: "长度在 1 到 6 个字符", trigger: "blur" },
         ],
       },
-      // 父级分类选中项绑定值
+      // 分类选中项绑定值
       pitchOnValue: [],
       // 父级分类list
       parentTypeData: [],
@@ -156,12 +156,12 @@ export default {
         // 触发子级的方式
         expandTrigger: "hover",
         // 对应的值
-        value: "cat_pid",
+        value: "cat_id",
         // 显示的文本
         label: "cat_name",
         // 哪个字段用于展示子层级
         children: "children",
-        // checkStrictly: true,
+        checkStrictly: true,
       },
     };
   },
