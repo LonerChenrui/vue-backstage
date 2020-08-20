@@ -38,7 +38,7 @@
         <template slot="acitve" slot-scope="{row}">
           <div>
             <el-button type="primary" size="mini">编辑</el-button>
-            <el-button type="danger" size="mini">删除</el-button>
+            <el-button type="danger" size="mini" @click="deleteActive(row.cat_id)">删除</el-button>
           </div>
         </template>
       </tree-table>
@@ -75,6 +75,7 @@
               :options="parentTypeData"
               :props="cascaderProps"
               @change="handleChange"
+              clearable
             ></el-cascader>
           </el-form-item>
         </el-form>
@@ -90,7 +91,11 @@
 <script>
 import UserBreadcrumb from "@/components/content/breadcrumb/Breadcrumb";
 
-import { getCateGoriesList, saveCategories } from "@/network/categories.js";
+import {
+  getCateGoriesList,
+  saveCategories,
+  deleteList,
+} from "@/network/categories.js";
 export default {
   name: "categories",
   data() {
@@ -208,7 +213,9 @@ export default {
     },
     // 关闭商品分类弹框
     handleClose() {
+      this.pitchOnValue = [];
       this.dialogVisible = false;
+      this.$refs["addGoodsRuleForm"].resetFields();
     },
     // 当选中的分类数据发生改变时触发
     handleChange() {
@@ -224,14 +231,42 @@ export default {
       }
     },
     // 保存分类
-    async saveCategories() {
-      const res = await saveCategories(this.addGoodsData);
-      if (res.meta.status !== 201) {
-        return this.$message.error(res.meta.msg);
-      }
-      this.dialogVisible = false;
-      this.getCateGoriesList();
-      this.$message.success(res.meta.msg);
+    saveCategories() {
+      this.$refs.addGoodsRuleForm.validate(async (valid) => {
+        if (valid) {
+          const res = await saveCategories(this.addGoodsData);
+          if (res.meta.status !== 201) {
+            return this.$message.error(res.meta.msg);
+          }
+          this.dialogVisible = false;
+          this.getCateGoriesList();
+          this.$message.success(res.meta.msg);
+        }
+      });
+    },
+    // 删除分类列表
+
+    deleteActive(id) {
+      console.log(id)
+      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(async () => {
+          const res = await deleteList(id);
+          if (res.meta.status !== 200) {
+            return this.$message.error(res.meta.msg);
+          }
+          this.getCateGoriesList();
+          this.$message.success(res.meta.msg);
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
     },
   },
 };

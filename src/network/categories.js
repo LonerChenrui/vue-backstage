@@ -18,3 +18,13 @@ export function saveCategories(payload) {
   })
 }
 
+// 删除分类list
+export function deleteList(id) {
+  return Axios.request({
+    url: `categories/${id}`,
+    method: 'delete',
+  })
+}
+
+
+
