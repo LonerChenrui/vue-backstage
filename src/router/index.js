@@ -9,6 +9,7 @@ const Users = () => import('@/views/users/userList/UserList.vue')
 const PowerList = () => import('@/views/power/powerList/PowerList.vue')
 const Roles = () => import('@/views/power/roles/Roles.vue')
 const Categories = () => import('@/views/cate/categories/categories.vue')
+const ClassifyParams = () => import('@/views/cate/classifyparams/classifyparams.vue')
 
 const routes = [
   {
@@ -30,7 +31,8 @@ const routes = [
       { path: '/users', name: 'users', component: Users },
       { path: '/rights', name: 'rights', component: PowerList },
       { path: '/roles', name: 'roles', component: Roles },
-      { path: '/categories', name: 'categories', component: Categories }
+      { path: '/categories', name: 'categories', component: Categories },
+      { path: '/params', name: 'classifyparams', component: ClassifyParams }
     ]
   }
 ]

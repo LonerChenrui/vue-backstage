@@ -30,7 +30,7 @@
           <div>
             <el-tag v-if="row.cat_level == 0" size="mini">标签一</el-tag>
             <el-tag v-else-if="row.cat_level == 1" type="success" size="mini">标签二</el-tag>
-            <el-tag v-else="row.cat_level == 2" type="warning" size="mini">标签三</el-tag>
+            <el-tag v-else type="warning" size="mini">标签三</el-tag>
           </div>
         </template>
 
