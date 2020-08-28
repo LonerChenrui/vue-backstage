@@ -23,9 +23,13 @@
 
       <!-- tabs标签页 动态参数、静态属性  @tab-click="handleClick"-->
       <div>
-        <el-tabs v-model="activeName" >
-          <el-tab-pane label="动态参数" name="first">动态参数11</el-tab-pane>
-          <el-tab-pane label="静态属性" name="second">静态属性22</el-tab-pane>
+        <el-tabs v-model="activeName">
+          <el-tab-pane label="动态参数" name="many">
+            <attr-ibutes :isDisabled="isDisabled" :activeName="activeName" />
+          </el-tab-pane>
+          <el-tab-pane label="静态属性" name="only">
+            <attr-ibutes :isDisabled="isDisabled" :activeName="activeName" />
+          </el-tab-pane>
         </el-tabs>
       </div>
     </el-card>
@@ -36,6 +40,7 @@
 import { getCascaderGoodsList } from "@/network/classifyparams";
 
 import UserBreadcrumb from "@/components/content/breadcrumb/Breadcrumb";
+import attrIbutes from "./children/attributes";
 
 export default {
   data() {
@@ -58,7 +63,9 @@ export default {
         children: "children",
       },
       // tabs标签页默认值
-      activeName: 'first'
+      activeName: "many",
+      // 是否禁用添加按钮
+      isDisabled: true,
     };
   },
   created() {
@@ -68,6 +75,7 @@ export default {
   props: {},
   components: {
     UserBreadcrumb,
+    attrIbutes,
   },
   computed: {},
   watch: {},
@@ -84,6 +92,14 @@ export default {
     // 当级联选择器内容发生改变时
     goodsTypehandleChange() {
       console.log(this.goodsTypeValue);
+
+      // 根据用户选择商品分类判断是否禁用添加按钮
+      if (this.goodsTypeValue.length == 3) {
+        this.isDisabled = false;
+      } else {
+        this.isDisabled = true;
+        this.goodsTypeValue = [];
+      }
     },
   },
 };
