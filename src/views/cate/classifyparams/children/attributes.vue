@@ -7,7 +7,7 @@
     </div>
     <!-- 动态参数、静态属性列表 -->
     <div>
-      <el-table :data="tableData" border>
+      <el-table :data="paramsListData" border>
         <!-- 展开行 -->
         <el-table-column type="expand">
           <template slot-scope="{ row }">
@@ -17,7 +17,7 @@
         <!-- 序号 -->
         <el-table-column type="index"></el-table-column>
         <!-- 属性名称 -->
-        <el-table-column prop="date" label="属性名称"></el-table-column>
+        <el-table-column prop="attr_name" :label="activeName == 'many' ? '参数名称' : '属性名称' "></el-table-column>
         <!-- 操作 -->
         <el-table-column label="操作">
           <template slot-scope="scope">
@@ -34,32 +34,12 @@
 export default {
   data() {
     return {
-      // table源数据
-      tableData: [
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1517 弄",
-        },
-        {
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1519 弄",
-        },
-        {
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1516 弄",
-        },
-      ],
+
     };
   },
-  created() {},
+  created() {
+    console.log(this.paramsListData,'列表时间啦啦啦')
+  },
   mounted() {},
   props: {
     // 是否禁用
@@ -73,6 +53,13 @@ export default {
     activeName: {
       type: String,
       required: true,
+    },
+    // 参数列表数据
+    paramsListData: {
+      type: Array,
+      default() {
+        return [];
+      },
     },
   },
   components: {},

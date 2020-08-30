@@ -21,14 +21,22 @@
         ></el-cascader>
       </div>
 
-      <!-- tabs标签页 动态参数、静态属性  @tab-click="handleClick"-->
+      <!-- tabs标签页 动态参数、静态属性 -->
       <div>
-        <el-tabs v-model="activeName">
+        <el-tabs v-model="activeName"  @tab-click="switchTabs">
           <el-tab-pane label="动态参数" name="many">
-            <attr-ibutes :isDisabled="isDisabled" :activeName="activeName" />
+            <attr-ibutes
+              :isDisabled="isDisabled"
+              :activeName="activeName"
+              :paramsListData="paramsListData"
+            />
           </el-tab-pane>
           <el-tab-pane label="静态属性" name="only">
-            <attr-ibutes :isDisabled="isDisabled" :activeName="activeName" />
+            <attr-ibutes
+              :isDisabled="isDisabled"
+              :activeName="activeName"
+              :paramsListData="paramsListData"
+            />
           </el-tab-pane>
         </el-tabs>
       </div>
@@ -37,7 +45,7 @@
 </template>
 
 <script>
-import { getCascaderGoodsList } from "@/network/classifyparams";
+import { getCascaderGoodsList, getParamsList } from "@/network/classifyparams";
 
 import UserBreadcrumb from "@/components/content/breadcrumb/Breadcrumb";
 import attrIbutes from "./children/attributes";
@@ -62,10 +70,14 @@ export default {
         // 哪个字段用于展示子层级
         children: "children",
       },
-      // tabs标签页默认值
+      // tabs标签页默认值 many动态参数 only静态属性
       activeName: "many",
+      // 分类参数所属分类
+      id: '',
       // 是否禁用添加按钮
       isDisabled: true,
+      // 参数列表数据
+      paramsListData: [],
     };
   },
   created() {
@@ -92,15 +104,31 @@ export default {
     // 当级联选择器内容发生改变时
     goodsTypehandleChange() {
       console.log(this.goodsTypeValue);
-
       // 根据用户选择商品分类判断是否禁用添加按钮
       if (this.goodsTypeValue.length == 3) {
         this.isDisabled = false;
+        this.id = this.goodsTypeValue[this.goodsTypeValue.length - 1];
+        this.getParamsList(this.id, this.activeName);
       } else {
         this.isDisabled = true;
         this.goodsTypeValue = [];
+        this.paramsListData = [];
+        this.id = '';
       }
     },
+    // 获取参数列表
+    async getParamsList(id, activeName) {
+      const res = await getParamsList(id, activeName);
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg);
+      this.paramsListData = res.data;
+      console.log(res);
+    },
+    // 切换tabs
+    switchTabs(tab, event) {
+      if(this.id) {
+        this.getParamsList(this.id, this.activeName);
+      }
+    }
   },
 };
 </script>

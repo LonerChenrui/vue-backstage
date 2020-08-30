@@ -197,7 +197,7 @@ export default {
   watch: {
     // 问题收集
     // vue中子组件的created、mounted钩子中获取不到props中的值问题
-    // 出现这种原因是父组件传递的数据是通过ajax请求回来的，请求的过程是需要时间的，但是子组件的渲染是快于ajax的，所有此时created、mounted已经执行了，所有只能拿到默认值
+    // 出现这种原因是父组件传递的数据是通过ajax请求回来的，请求的过程是需要时间的，但是子组件的渲染是快于ajax的，所以此时created、mounted已经执行了，所有只能拿到默认值
     rolesListData: {
       handler(newVal, oldVal) {
         newVal && (this.rolesListTableData = newVal);
