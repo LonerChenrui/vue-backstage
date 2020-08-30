@@ -29,6 +29,8 @@
               :isDisabled="isDisabled"
               :activeName="activeName"
               :paramsListData="paramsListData"
+              :id="id"
+              @updeParamsList="updeParamsList"
             />
           </el-tab-pane>
           <el-tab-pane label="静态属性" name="only">
@@ -36,6 +38,8 @@
               :isDisabled="isDisabled"
               :activeName="activeName"
               :paramsListData="paramsListData"
+              :id="id"
+              @updeParamsList="updeParamsList"
             />
           </el-tab-pane>
         </el-tabs>
@@ -103,7 +107,6 @@ export default {
 
     // 当级联选择器内容发生改变时
     goodsTypehandleChange() {
-      console.log(this.goodsTypeValue);
       // 根据用户选择商品分类判断是否禁用添加按钮
       if (this.goodsTypeValue.length == 3) {
         this.isDisabled = false;
@@ -121,13 +124,16 @@ export default {
       const res = await getParamsList(id, activeName);
       if (res.meta.status !== 200) return this.$message.error(res.meta.msg);
       this.paramsListData = res.data;
-      console.log(res);
     },
     // 切换tabs
     switchTabs(tab, event) {
       if(this.id) {
         this.getParamsList(this.id, this.activeName);
       }
+    },
+    // 添加参数列表成功后进行列表刷新
+    updeParamsList() {
+      this.getParamsList(this.id, this.activeName);
     }
   },
 };

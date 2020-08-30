@@ -2,8 +2,12 @@
   <div class="attributes">
     <!-- 动态参数、静态属性按钮 -->
     <div class="addBtn">
-      <el-button type="primary" size="mini" :disabled="isDisabled" v-if="activeName == 'many'">添加参数</el-button>
-      <el-button type="primary" size="mini" :disabled="isDisabled" v-else>添加属性</el-button>
+      <el-button
+        type="primary"
+        size="mini"
+        :disabled="isDisabled"
+        @click="paramsAndAttributeDialog"
+      >{{activeName == 'many' ? '添加参数' : '添加属性'}}</el-button>
     </div>
     <!-- 动态参数、静态属性列表 -->
     <div>
@@ -27,19 +31,22 @@
         </el-table-column>
       </el-table>
     </div>
+    <!-- 弹框 -->
+    <classify-dialog ref="classifyDialogRef" :title="title" @submit="submit"></classify-dialog>
   </div>
 </template>
 
 <script>
+import { addParamsList } from "@/network/classifyparams";
+import ClassifyDialog from "./classifyDialog";
 export default {
   data() {
     return {
-
+      // 弹框标题
+      title: "",
     };
   },
-  created() {
-    console.log(this.paramsListData,'列表时间啦啦啦')
-  },
+  created() {},
   mounted() {},
   props: {
     // 是否禁用
@@ -61,8 +68,14 @@ export default {
         return [];
       },
     },
+    // 分类id
+    id: {
+      type: [String, Number],
+    },
   },
-  components: {},
+  components: {
+    ClassifyDialog,
+  },
   computed: {},
   watch: {},
   methods: {
@@ -70,6 +83,32 @@ export default {
     handleEdit() {},
     // 删除
     handleDelete() {},
+    // 点击按钮触发添加参数和添加属性弹框
+    paramsAndAttributeDialog() {
+      this.$refs.classifyDialogRef.classifyDialogVisible = true;
+      this.title = this.activeName == "many" ? "动态参数" : "静态属性";
+    },
+    // 添加弹框中的确定操作
+    submit(attr_name) {
+      console.log(this.id);
+      console.log(this.activeName);
+      addParamsList(this.id, {
+        attr_name: attr_name,
+        attr_sel: this.activeName,
+      })
+        .then((res) => {
+          if (res.meta.status == 201) {
+            this.$message.success(res.meta.msg);
+            this.$emit('updeParamsList')
+            this.$refs.classifyDialogRef.classifyDialogVisible = false;
+          } else {
+            this.$message.error(res.meta.msg);
+          }
+        })
+        .catch((error) => {
+          this.$message.error(error.meta.msg);
+        });
+    },
   },
 };
 </script>

@@ -19,3 +19,12 @@ export function getParamsList(id,activeName) {
     }
   })
 }
+
+// 添加参数列表
+export function addParamsList(id,payload) {
+  return Axios.request({
+    url: `categories/${id}/attributes`,
+    method: 'post',
+    data: payload
+  })
+}
