@@ -28,3 +28,20 @@ export function addParamsList(id,payload) {
     data: payload
   })
 }
+
+// 编辑参数列表
+export function editParamsList(id,attrId,payload) {
+  return Axios.request({
+    url: `categories/${id}/attributes/${attrId}`,
+    method: 'put',
+    data: payload
+  })
+}
+
+// 删除参数列表
+export function deleteParamsList(id,attrid) {
+  return Axios.request({
+    url: `categories/${id}/attributes/${attrid}`,
+    method: 'delete',
+  })
+}

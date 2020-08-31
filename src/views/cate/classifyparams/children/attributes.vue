@@ -26,24 +26,30 @@
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
     </div>
     <!-- 弹框 -->
-    <classify-dialog ref="classifyDialogRef" :title="title" @submit="submit"></classify-dialog>
+    <classify-dialog ref="classifyDialogRef" :title="title" :attr_id="attr_id" @submit="submit"></classify-dialog>
   </div>
 </template>
 
 <script>
-import { addParamsList } from "@/network/classifyparams";
+import {
+  addParamsList,
+  editParamsList,
+  deleteParamsList,
+} from "@/network/classifyparams";
 import ClassifyDialog from "./classifyDialog";
 export default {
   data() {
     return {
       // 弹框标题
       title: "",
+      // 属性id
+      attr_id: "",
     };
   },
   created() {},
@@ -79,35 +85,83 @@ export default {
   computed: {},
   watch: {},
   methods: {
-    // 编辑
-    handleEdit() {},
-    // 删除
-    handleDelete() {},
+    // 编辑按钮
+    handleEdit(index, row) {
+      this.attr_id = row.attr_id;
+      this.$refs.classifyDialogRef.dialogFormData.attr_name = row.attr_name;
+      this.title = this.activeName == "many" ? "动态参数" : "静态属性";
+      this.$refs.classifyDialogRef.classifyDialogVisible = true;
+    },
+    // 删除操作
+    handleDelete(row) {
+      this.$confirm("确定删除？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(async () => {
+          const res = await deleteParamsList(this.id, row.attr_id);
+          if (res.meta.status !== 200) {
+            this.$message.error(res.meta.msg);
+            return;
+          }
+          this.$message.success(res.meta.msg);
+          this.$emit("updeParamsList");
+          this.$refs.classifyDialogRef.classifyDialogVisible = false;
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
+    },
     // 点击按钮触发添加参数和添加属性弹框
     paramsAndAttributeDialog() {
+      this.attr_id = "";
+      this.$refs.classifyDialogRef.dialogFormData.attr_name = "";
       this.$refs.classifyDialogRef.classifyDialogVisible = true;
       this.title = this.activeName == "many" ? "动态参数" : "静态属性";
     },
-    // 添加弹框中的确定操作
+    // 弹框中的确定操作
     submit(attr_name) {
-      console.log(this.id);
-      console.log(this.activeName);
-      addParamsList(this.id, {
-        attr_name: attr_name,
-        attr_sel: this.activeName,
-      })
-        .then((res) => {
-          if (res.meta.status == 201) {
-            this.$message.success(res.meta.msg);
-            this.$emit('updeParamsList')
-            this.$refs.classifyDialogRef.classifyDialogVisible = false;
-          } else {
-            this.$message.error(res.meta.msg);
-          }
+      if (!this.attr_id) {
+        // 添加 id: 分类id、attr_name:编辑名称、attr_sel：类型 [many或only]
+        addParamsList(this.id, {
+          attr_name: attr_name,
+          attr_sel: this.activeName,
         })
-        .catch((error) => {
-          this.$message.error(error.meta.msg);
-        });
+          .then((res) => {
+            if (res.meta.status == 201) {
+              this.$message.success(res.meta.msg);
+              this.$emit("updeParamsList");
+              this.$refs.classifyDialogRef.classifyDialogVisible = false;
+            } else {
+              this.$message.error(res.meta.msg);
+            }
+          })
+          .catch((error) => {
+            this.$message.error(error.meta.msg);
+          });
+      } else {
+        // 编辑 id: 分类id、attr_id：属性id、attr_name:编辑名称、attr_sel：类型 [many或only]
+        editParamsList(this.id, this.attr_id, {
+          attr_name: this.$refs.classifyDialogRef.dialogFormData.attr_name,
+          attr_sel: this.activeName,
+        })
+          .then((res) => {
+            if (res.meta.status == 200) {
+              this.$message.success(res.meta.msg);
+              this.$emit("updeParamsList");
+              this.$refs.classifyDialogRef.classifyDialogVisible = false;
+            } else {
+              this.$message.error(res.meta.msg);
+            }
+          })
+          .catch((error) => {
+            this.$message.error(error.meta.msg);
+          });
+      }
     },
   },
 };

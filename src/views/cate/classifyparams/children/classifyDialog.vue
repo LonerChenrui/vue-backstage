@@ -1,7 +1,7 @@
 <template>
   <div class="classifyDialog">
     <el-dialog
-      :title="'添加' + title"
+      :title=" (attr_id ? '修改' : '添加') + title"
       :visible.sync="classifyDialogVisible"
       width="60%"
       :before-close="classifyDialogClose"
@@ -51,9 +51,11 @@ export default {
     title: {
       type: String,
       default() {
-        return "弹框";
+        return "提示";
       },
     },
+    // 属性id
+    attr_id: [String,Number]
   },
   components: {},
   computed: {},
