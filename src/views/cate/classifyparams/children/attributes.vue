@@ -15,7 +15,17 @@
         <!-- 展开行 -->
         <el-table-column type="expand">
           <template slot-scope="{ row }">
-            <pre>{{row}}</pre>
+            <el-tag v-for="(item,index) in row.attr_vals" :key="index">{{item}}</el-tag>
+            <el-input
+              class="input-new-tag"
+              v-if="row.inputVisible"
+              v-model="row.inputValue"
+              ref="saveTagInput"
+              size="small"
+              @keyup.enter.native="handleInputConfirm"
+              @blur="handleInputConfirm"
+            ></el-input>
+            <el-button v-else class="button-new-tag" size="small" @click="showInput(row)">+ New Tag</el-button>
           </template>
         </el-table-column>
         <!-- 序号 -->
@@ -50,6 +60,10 @@ export default {
       title: "",
       // 属性id
       attr_id: "",
+      // // input框是否显示
+      // inputVisible: false,
+      // // input框中的值
+      // inputValue: "",
     };
   },
   created() {},
@@ -163,6 +177,15 @@ export default {
           });
       }
     },
+    // 失去焦点、按下Enter键新增tag标签
+    handleInputConfirm() {},
+    // 点击New Tag显示input框
+    showInput(row) {
+      row.inputVisible = true;
+      this.$nextTick((_) => {
+        this.$refs.saveTagInput.$refs.input.focus();
+      });
+    },
   },
 };
 </script>
@@ -171,5 +194,20 @@ export default {
 //@import url(); 引入公共css类
 .addBtn {
   margin-bottom: 20px;
+}
+.el-tag + .el-tag {
+  margin-left: 10px;
+}
+.button-new-tag {
+  margin-left: 10px;
+  height: 32px;
+  line-height: 30px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.input-new-tag {
+  width: 90px;
+  margin-left: 10px;
+  vertical-align: bottom;
 }
 </style>

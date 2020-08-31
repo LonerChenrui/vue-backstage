@@ -23,7 +23,7 @@
 
       <!-- tabs标签页 动态参数、静态属性 -->
       <div>
-        <el-tabs v-model="activeName"  @tab-click="switchTabs">
+        <el-tabs v-model="activeName" @tab-click="switchTabs">
           <el-tab-pane label="动态参数" name="many">
             <attr-ibutes
               :isDisabled="isDisabled"
@@ -77,7 +77,7 @@ export default {
       // tabs标签页默认值 many动态参数 only静态属性
       activeName: "many",
       // 分类参数所属分类
-      id: '',
+      id: "",
       // 是否禁用添加按钮
       isDisabled: true,
       // 参数列表数据
@@ -116,25 +116,40 @@ export default {
         this.isDisabled = true;
         this.goodsTypeValue = [];
         this.paramsListData = [];
-        this.id = '';
+        this.id = "";
       }
     },
     // 获取参数列表
     async getParamsList(id, activeName) {
       const res = await getParamsList(id, activeName);
       if (res.meta.status !== 200) return this.$message.error(res.meta.msg);
-      this.paramsListData = res.data;
+      // this.paramsListData = res.data;
+      // 获取列表展开行的数据
+      let result = res.data.map((itme, index) => {
+        // input框是否显示
+        itme.inputVisible = false;
+        // input框中的值
+        itme.inputValue = "";
+        if (itme.attr_vals && itme.attr_vals.length > 0) {
+          itme.attr_vals = itme.attr_vals.split(" ");
+        } else {
+          itme.attr_vals = [];
+        }
+        return itme;
+      });
+      this.paramsListData = result;
+      console.log(this.paramsListData);
     },
     // 切换tabs
     switchTabs(tab, event) {
-      if(this.id) {
+      if (this.id) {
         this.getParamsList(this.id, this.activeName);
       }
     },
     // 添加参数列表成功后进行列表刷新
     updeParamsList() {
       this.getParamsList(this.id, this.activeName);
-    }
+    },
   },
 };
 </script>
