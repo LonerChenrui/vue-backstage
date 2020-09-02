@@ -138,7 +138,6 @@ export default {
         return itme;
       });
       this.paramsListData = result;
-      console.log(this.paramsListData);
     },
     // 切换tabs
     switchTabs(tab, event) {

@@ -15,15 +15,20 @@
         <!-- 展开行 -->
         <el-table-column type="expand">
           <template slot-scope="{ row }">
-            <el-tag v-for="(item,index) in row.attr_vals" :key="index">{{item}}</el-tag>
+            <el-tag
+              closable
+              @close="handleClose(row, item)"
+              v-for="(item,index) in row.attr_vals"
+              :key="index"
+            >{{item}}</el-tag>
             <el-input
               class="input-new-tag"
               v-if="row.inputVisible"
               v-model="row.inputValue"
               ref="saveTagInput"
               size="small"
-              @keyup.enter.native="handleInputConfirm"
-              @blur="handleInputConfirm"
+              @keyup.enter.native="handleInputConfirm(row)"
+              @blur="handleInputConfirm(row)"
             ></el-input>
             <el-button v-else class="button-new-tag" size="small" @click="showInput(row)">+ New Tag</el-button>
           </template>
@@ -178,7 +183,52 @@ export default {
       }
     },
     // 失去焦点、按下Enter键新增tag标签
-    handleInputConfirm() {},
+     handleInputConfirm(row) {
+      if (row.inputValue.trim() && row.inputValue.length > 0) {
+        row.attr_vals.push(row.inputValue);
+
+        // const res = await editParamsList(this.id, row.attr_id, {
+        //   attr_name: row.inputValue,
+        //   attr_sel: this.activeName,
+        //   attr_vals: row.attr_vals.join(" "),
+        // });
+
+        // if (res.meta.status !== 200) {
+        //   this.$message.error(res.meta.msg);
+        //   return;
+        // }
+        // this.$message.success(res.meta.msg);
+
+        this.handleTag(row)
+
+        row.inputVisible = false;
+        row.inputValue = "";
+      }
+    },
+
+    // 移除tag标签
+    handleClose(row, item) {
+      row.attr_vals.splice(row.attr_vals.indexOf(item), 1);
+      this.handleTag(row, item)
+    },
+
+    // tag标签入数据库处理
+    async handleTag(row, item) {
+      let inputValue = item ? item : row.inputValue;
+      const res = await editParamsList(this.id, row.attr_id, {
+        attr_name: inputValue,
+        attr_sel: this.activeName,
+        attr_vals: row.attr_vals.join(" "),
+      });
+
+      if (res.meta.status !== 200) {
+        this.$message.error(res.meta.msg);
+        return;
+      }
+      this.$message.success(res.meta.msg);
+
+    },
+
     // 点击New Tag显示input框
     showInput(row) {
       row.inputVisible = true;

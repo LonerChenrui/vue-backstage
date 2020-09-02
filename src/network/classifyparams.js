@@ -45,3 +45,5 @@ export function deleteParamsList(id,attrid) {
     method: 'delete',
   })
 }
+
+
