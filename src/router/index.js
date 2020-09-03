@@ -10,6 +10,7 @@ const PowerList = () => import('@/views/power/powerList/PowerList.vue')
 const Roles = () => import('@/views/power/roles/Roles.vue')
 const Categories = () => import('@/views/cate/categories/categories.vue')
 const ClassifyParams = () => import('@/views/cate/classifyparams/classifyparams.vue')
+const GoodsList = () => import('@/views/cate/goodsList/goodsList.vue')
 
 const routes = [
   {
@@ -32,7 +33,8 @@ const routes = [
       { path: '/rights', name: 'rights', component: PowerList },
       { path: '/roles', name: 'roles', component: Roles },
       { path: '/categories', name: 'categories', component: Categories },
-      { path: '/params', name: 'classifyparams', component: ClassifyParams }
+      { path: '/params', name: 'classifyparams', component: ClassifyParams },
+      { path: '/goods', name: 'goods', component: GoodsList },
     ]
   }
 ]
