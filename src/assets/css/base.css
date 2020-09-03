@@ -16,6 +16,7 @@ html {
   color: #666666;
   background: #ffffff;
   -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: text;
 }
 #app {
   width: 100%;
