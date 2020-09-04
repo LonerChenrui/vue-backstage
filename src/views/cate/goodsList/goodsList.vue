@@ -13,7 +13,7 @@
             </el-input>
           </el-col>
           <el-col :span="4">
-            <el-button type="primary">添加商品</el-button>
+            <el-button type="primary" @click="setPath">添加商品</el-button>
           </el-col>
         </el-row>
       </div>
@@ -90,11 +90,7 @@ export default {
   components: {
     UserBreadcrumb,
   },
-  computed: {
-    aa() {
-      return dateFormat("YYYY-mm-dd HH:MM:SS", new Date());
-    },
-  },
+  computed: {},
   watch: {},
   methods: {
     // 获取商品列表
@@ -144,6 +140,13 @@ export default {
             message: "已取消删除",
           });
         });
+    },
+    // 添加添加组件
+    setPath() {
+      this.$router.push({
+        path: "addgoodslist",
+        query: {},
+      });
     },
   },
 };
