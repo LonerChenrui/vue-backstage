@@ -23,9 +23,15 @@
           label-width="100px"
           class="demo-ruleForm"
         >
-          <el-tabs tab-position="left" v-model="acitveIndex">
-            <el-tab-pane label="基本信息" name="0"></el-tab-pane>
-            <el-tab-pane label="商品参数" name="1">商品参数</el-tab-pane>
+          <el-tabs tab-position="left" v-model="acitveIndex" :before-leave="beforeLeaveTab">
+            <el-tab-pane label="基本信息" name="0">
+              <BasiceInfoTabs
+                :addGoodsDateForm="addGoodsDateForm"
+                :goodsTypeData="goodsTypeData"
+                @handlegoodscat="handlegoodscat"
+              />
+            </el-tab-pane>
+            <el-tab-pane label="商品参数" name="1"></el-tab-pane>
             <el-tab-pane label="商品属性" name="2">商品属性</el-tab-pane>
             <el-tab-pane label="商品图片" name="3">商品图片</el-tab-pane>
             <el-tab-pane label="商品内容" name="4">商品内容</el-tab-pane>
@@ -38,6 +44,10 @@
 
 <script>
 import UserBreadcrumb from "@/components/content/breadcrumb/Breadcrumb";
+import BasiceInfoTabs from "./children/basicsInfoTabs";
+
+import { getCascaderGoodsList } from "@/network/addGoodsList";
+
 export default {
   data() {
     return {
@@ -55,22 +65,67 @@ export default {
         "完成",
       ],
       // form源数据
-      addGoodsDateForm: {},
+      addGoodsDateForm: {
+        // 商品名称
+        goods_name: "",
+        // 商品重量
+        goods_weight: "",
+        // 商品数量
+        goods_number: "",
+        // 商品分类 (级联选择器选中的值)
+        goods_cat: [],
+      },
+      // 级联选择器源数据
+      goodsTypeData: [],
       // form验证规则
       addGoodsRules: {
-        // name: [{ required: true, message: "请输入活动名称", trigger: "blur" }],
+        goods_name: [
+          { required: true, message: "请输入商品名称", trigger: "blur" },
+        ],
+        goods_weight: [
+          { required: true, message: "请输入商品重量", trigger: "blur" },
+        ],
+        goods_number: [
+          { required: true, message: "请输入商品数量", trigger: "blur" },
+        ],
+        goods_cat: [
+          { required: true, message: "请输入三级商品分类", trigger: "change" },
+        ],
       },
     };
   },
-  created() {},
+  created() {
+    this.getCascaderGoodsList();
+  },
   mounted() {},
   props: {},
   components: {
     UserBreadcrumb,
+    BasiceInfoTabs,
   },
   computed: {},
   watch: {},
-  methods: {},
+  methods: {
+    // 级联选择器商品分类数据
+    async getCascaderGoodsList() {
+      const result = await getCascaderGoodsList({ type: 3 });
+      if (result.meta.status !== 200) {
+        return this.$message.error(result.meta.msg);
+      }
+      this.goodsTypeData = result.data;
+    },
+    // 级联选择器只能选择三级分类
+    handlegoodscat() {
+      this.addGoodsDateForm.goods_cat = [];
+    },
+    // 阻止切换tabs (before-leave 钩子函数 返回 false 或者 Promise 且被 reject，则阻止切换。) 
+    beforeLeaveTab(activeName, oldActiveName) {
+      if (this.addGoodsDateForm.goods_cat.length != 3) {
+        this.$message.error("请选择三级分类");
+        return false;
+      }
+    },
+  },
 };
 </script>
 
