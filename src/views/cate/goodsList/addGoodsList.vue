@@ -20,10 +20,15 @@
           :model="addGoodsDateForm"
           :rules="addGoodsRules"
           ref="addGoodsRef"
-          label-width="100px"
           class="demo-ruleForm"
+          label-position="top"
         >
-          <el-tabs tab-position="left" v-model="acitveIndex" :before-leave="beforeLeaveTab">
+          <el-tabs
+            tab-position="left"
+            v-model="acitveIndex"
+            :before-leave="beforeLeaveTab"
+            @tab-click="tabClick"
+          >
             <el-tab-pane label="基本信息" name="0">
               <BasiceInfoTabs
                 :addGoodsDateForm="addGoodsDateForm"
@@ -31,8 +36,12 @@
                 @handlegoodscat="handlegoodscat"
               />
             </el-tab-pane>
-            <el-tab-pane label="商品参数" name="1"></el-tab-pane>
-            <el-tab-pane label="商品属性" name="2">商品属性</el-tab-pane>
+            <el-tab-pane label="商品参数" name="1">
+              <ParamsTabs :manyListData="manyListData" />
+            </el-tab-pane>
+            <el-tab-pane label="商品属性" name="2">
+              <AttrTabs :onlyListData="onlyListData" />
+            </el-tab-pane>
             <el-tab-pane label="商品图片" name="3">商品图片</el-tab-pane>
             <el-tab-pane label="商品内容" name="4">商品内容</el-tab-pane>
           </el-tabs>
@@ -45,8 +54,10 @@
 <script>
 import UserBreadcrumb from "@/components/content/breadcrumb/Breadcrumb";
 import BasiceInfoTabs from "./children/basicsInfoTabs";
+import ParamsTabs from "./children/paramsTabs";
+import AttrTabs from "./children/attrTabs";
 
-import { getCascaderGoodsList } from "@/network/addGoodsList";
+import { getCascaderGoodsList, getParamsList } from "@/network/addGoodsList";
 
 export default {
   data() {
@@ -77,6 +88,11 @@ export default {
       },
       // 级联选择器源数据
       goodsTypeData: [],
+      // 商品参数
+      manyListData: [],
+      // 商品属性
+      onlyListData: [],
+      
       // form验证规则
       addGoodsRules: {
         goods_name: [
@@ -102,8 +118,20 @@ export default {
   components: {
     UserBreadcrumb,
     BasiceInfoTabs,
+    ParamsTabs,
+    AttrTabs,
   },
-  computed: {},
+  computed: {
+    // 选择了三级分类数据
+    getGoodsCatValue() {
+      if (this.addGoodsDateForm.goods_cat.length == 3) {
+        let val = this.addGoodsDateForm.goods_cat[
+          this.addGoodsDateForm.goods_cat.length - 1
+        ];
+        return val;
+      }
+    },
+  },
   watch: {},
   methods: {
     // 级联选择器商品分类数据
@@ -118,11 +146,48 @@ export default {
     handlegoodscat() {
       this.addGoodsDateForm.goods_cat = [];
     },
-    // 阻止切换tabs (before-leave 钩子函数 返回 false 或者 Promise 且被 reject，则阻止切换。) 
+    // 阻止切换tabs (before-leave 钩子函数 返回 false 或者 Promise 且被 reject，则阻止切换。)
     beforeLeaveTab(activeName, oldActiveName) {
       if (this.addGoodsDateForm.goods_cat.length != 3) {
         this.$message.error("请选择三级分类");
         return false;
+      }
+    },
+
+    // 切换Tabs
+    tabClick() {
+      if (this.acitveIndex == "1") {
+        this.getParamsList(this.getGoodsCatValue, "many");
+      }
+      if (this.acitveIndex == "2") {
+        this.getParamsList(this.getGoodsCatValue, "only");
+      }
+    },
+
+    // 获取参数列表
+    async getParamsList(id, activeName) {
+      const res = await getParamsList(id, activeName);
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg);
+      let result = res.data.map((itme, index) => {
+        if (itme.attr_vals && itme.attr_vals.length > 0) {
+          if (activeName == "many") {
+            itme.attr_vals = itme.attr_vals.split(" ");
+          } else {
+            itme.attr_vals = itme.attr_vals;
+          }
+        } else {
+          if (activeName == "many") {
+            itme.attr_vals = [];
+          } else {
+            itme.attr_vals = "";
+          }
+        }
+        return itme;
+      });
+      if (activeName == "many") {
+        this.manyListData = result;
+      } else {
+        this.onlyListData = result;
       }
     },
   },

@@ -8,3 +8,14 @@ export function getCascaderGoodsList(payload) {
     params: payload
   })
 }
+
+// 获取参数列表
+export function getParamsList(id,activeName) {
+  return Axios.request({
+    url: `categories/${id}/attributes`,
+    method: 'get',
+    params: {
+      sel: activeName
+    }
+  })
+}
