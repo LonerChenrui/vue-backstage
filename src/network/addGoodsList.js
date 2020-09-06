@@ -19,3 +19,12 @@ export function getParamsList(id,activeName) {
     }
   })
 }
+
+// 保存添加商品
+export function addGoodsList(payload) {
+  return Axios.request({
+    url: 'goods',
+    method: 'post',
+    data: payload
+  })
+}

@@ -4,7 +4,7 @@
     <quill-editor ref="myQuillEditor" v-model="addGoodsDateForm.goods_introduce" />
     <!-- 保存 -->
     <div>
-      <el-button size="small" type="primary">添加商品</el-button>
+      <el-button size="small" type="primary" @click="submitForm">添加商品</el-button>
     </div>
   </div>
 </template>
@@ -27,7 +27,12 @@ export default {
   components: {},
   computed: {},
   watch: {},
-  methods: {},
+  methods: {
+    // 添加商品
+    submitForm(formName) {
+      this.$emit("submitForm");
+    },
+  },
 };
 </script>
 

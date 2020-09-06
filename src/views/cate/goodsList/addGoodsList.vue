@@ -49,7 +49,7 @@
               />
             </el-tab-pane>
             <el-tab-pane label="商品内容" name="4">
-              <QuillEditorTabs :addGoodsDateForm="addGoodsDateForm"/>
+              <QuillEditorTabs :addGoodsDateForm="addGoodsDateForm" @submitForm="submitForm" />
             </el-tab-pane>
           </el-tabs>
         </el-form>
@@ -66,7 +66,11 @@ import AttrTabs from "./children/attrTabs";
 import UploadImgTabs from "./children/uploadImgTabs";
 import QuillEditorTabs from "./children/quillEditorTabs";
 
-import { getCascaderGoodsList, getParamsList } from "@/network/addGoodsList";
+import {
+  getCascaderGoodsList,
+  getParamsList,
+  addGoodsList,
+} from "@/network/addGoodsList";
 
 export default {
   data() {
@@ -89,18 +93,19 @@ export default {
         // 商品名称
         goods_name: "",
         // 商品价格
-        goods_price: "",
+        goods_price: "1",
         // 商品重量
-        goods_weight: "",
+        goods_weight: "1",
         // 商品数量
-        goods_number: "",
-        // 商品分类 (级联选择器选中的值)
+        goods_number: "1",
+        // 商品分类 (级联选择器选中的值) 处理成字符串
         goods_cat: [],
+        // 商品的参数（数组），包含 `动态参数` 和 `静态属性`
+        attrs: [],
         // 上传图片的临时路径
         pics: [],
         // 富文本编辑内容
-        goods_introduce: '',
-        
+        goods_introduce: "",
       },
       // 级联选择器源数据
       goodsTypeData: [],
@@ -140,7 +145,7 @@ export default {
     ParamsTabs,
     AttrTabs,
     UploadImgTabs,
-    QuillEditorTabs
+    QuillEditorTabs,
   },
   computed: {
     // 选择了三级分类数据
@@ -169,10 +174,10 @@ export default {
     },
     // 阻止切换tabs (before-leave 钩子函数 返回 false 或者 Promise 且被 reject，则阻止切换。)
     beforeLeaveTab(activeName, oldActiveName) {
-      // if (this.addGoodsDateForm.goods_cat.length != 3) {
-      //   this.$message.error("请选择三级分类");
-      //   return false;
-      // }
+      if (this.addGoodsDateForm.goods_cat.length != 3) {
+        this.$message.error("请选择三级分类");
+        return false;
+      }
     },
 
     // 切换Tabs
@@ -210,6 +215,49 @@ export default {
       } else {
         this.onlyListData = result;
       }
+    },
+
+    // 保存添加商品
+    submitForm() {
+      let addGoodsDateFormCopy = JSON.parse(
+        JSON.stringify(this.addGoodsDateForm)
+      );
+      let manyListDataCopy = JSON.parse(JSON.stringify(this.manyListData));
+      let onlyListDataCopy = JSON.parse(JSON.stringify(this.onlyListData));
+
+      let attrArray = [];
+      for (let [index, item] of manyListDataCopy.entries()) {
+        let obj = {
+          attr_id: item.attr_id,
+          attr_value: item.attr_vals.join(" "),
+        };
+        attrArray.push(obj);
+      }
+      for (let [index, item] of onlyListDataCopy.entries()) {
+        let obj = {
+          attr_id: item.attr_id,
+          attr_value: item.attr_vals,
+        };
+        attrArray.push(obj);
+      }
+
+      addGoodsDateFormCopy.goods_cat = addGoodsDateFormCopy.goods_cat.join(",");
+      addGoodsDateFormCopy.attrs = attrArray;
+
+      this.$refs.addGoodsRef.validate(async (valid) => {
+        if (valid) {
+          const res = await addGoodsList(addGoodsDateFormCopy);
+          if (res.meta.status !== 201) return this.$message.error(res.meta.msg);
+
+          this.$message.success(res.meta.msg);
+          this.$router.push({
+            path: "/goods",
+            query: {},
+          });
+        } else {
+          return this.$message.error("res.meta.msg");
+        }
+      });
     },
   },
 };
