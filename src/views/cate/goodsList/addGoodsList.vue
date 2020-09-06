@@ -42,7 +42,12 @@
             <el-tab-pane label="商品属性" name="2">
               <AttrTabs :onlyListData="onlyListData" />
             </el-tab-pane>
-            <el-tab-pane label="商品图片" name="3">商品图片</el-tab-pane>
+            <el-tab-pane label="商品图片" name="3">
+              <UploadImgTabs
+                :addGoodsDateForm="addGoodsDateForm"
+                @updatePics="value => addGoodsDateForm.pics = value"
+              />
+            </el-tab-pane>
             <el-tab-pane label="商品内容" name="4">商品内容</el-tab-pane>
           </el-tabs>
         </el-form>
@@ -56,6 +61,7 @@ import UserBreadcrumb from "@/components/content/breadcrumb/Breadcrumb";
 import BasiceInfoTabs from "./children/basicsInfoTabs";
 import ParamsTabs from "./children/paramsTabs";
 import AttrTabs from "./children/attrTabs";
+import UploadImgTabs from "./children/uploadImgTabs";
 
 import { getCascaderGoodsList, getParamsList } from "@/network/addGoodsList";
 
@@ -79,12 +85,16 @@ export default {
       addGoodsDateForm: {
         // 商品名称
         goods_name: "",
+        // 商品价格
+        goods_price: "",
         // 商品重量
         goods_weight: "",
         // 商品数量
         goods_number: "",
         // 商品分类 (级联选择器选中的值)
         goods_cat: [],
+        // 上传图片的临时路径
+        pics: [],
       },
       // 级联选择器源数据
       goodsTypeData: [],
@@ -92,11 +102,14 @@ export default {
       manyListData: [],
       // 商品属性
       onlyListData: [],
-      
+
       // form验证规则
       addGoodsRules: {
         goods_name: [
           { required: true, message: "请输入商品名称", trigger: "blur" },
+        ],
+        goods_price: [
+          { required: true, message: "请输入商品价格", trigger: "blur" },
         ],
         goods_weight: [
           { required: true, message: "请输入商品重量", trigger: "blur" },
@@ -120,6 +133,7 @@ export default {
     BasiceInfoTabs,
     ParamsTabs,
     AttrTabs,
+    UploadImgTabs,
   },
   computed: {
     // 选择了三级分类数据
@@ -148,10 +162,10 @@ export default {
     },
     // 阻止切换tabs (before-leave 钩子函数 返回 false 或者 Promise 且被 reject，则阻止切换。)
     beforeLeaveTab(activeName, oldActiveName) {
-      if (this.addGoodsDateForm.goods_cat.length != 3) {
-        this.$message.error("请选择三级分类");
-        return false;
-      }
+      // if (this.addGoodsDateForm.goods_cat.length != 3) {
+      //   this.$message.error("请选择三级分类");
+      //   return false;
+      // }
     },
 
     // 切换Tabs

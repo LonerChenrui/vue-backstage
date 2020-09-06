@@ -3,6 +3,11 @@
     <el-form-item label="商品名称" prop="goods_name">
       <el-input v-model="addGoodsDateForm.goods_name"></el-input>
     </el-form-item>
+
+    <el-form-item label="商品价格" prop="goods_price">
+      <el-input v-model="addGoodsDateForm.goods_price"></el-input>
+    </el-form-item>
+
     <el-form-item label="商品重量" prop="goods_weight">
       <el-input v-model="addGoodsDateForm.goods_weight" type="number"></el-input>
     </el-form-item>
@@ -62,7 +67,7 @@ export default {
     // 级联选择器内容发生改变
     goodsTypehandleChange() {
       if (this.addGoodsDateForm.goods_cat.length !== 3) {
-        this.$emit('handlegoodscat')
+        this.$emit("handlegoodscat");
       }
     },
   },
