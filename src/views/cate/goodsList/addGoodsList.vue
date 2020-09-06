@@ -48,7 +48,9 @@
                 @updatePics="value => addGoodsDateForm.pics = value"
               />
             </el-tab-pane>
-            <el-tab-pane label="商品内容" name="4">商品内容</el-tab-pane>
+            <el-tab-pane label="商品内容" name="4">
+              <QuillEditorTabs :addGoodsDateForm="addGoodsDateForm"/>
+            </el-tab-pane>
           </el-tabs>
         </el-form>
       </div>
@@ -62,6 +64,7 @@ import BasiceInfoTabs from "./children/basicsInfoTabs";
 import ParamsTabs from "./children/paramsTabs";
 import AttrTabs from "./children/attrTabs";
 import UploadImgTabs from "./children/uploadImgTabs";
+import QuillEditorTabs from "./children/quillEditorTabs";
 
 import { getCascaderGoodsList, getParamsList } from "@/network/addGoodsList";
 
@@ -95,6 +98,9 @@ export default {
         goods_cat: [],
         // 上传图片的临时路径
         pics: [],
+        // 富文本编辑内容
+        goods_introduce: '',
+        
       },
       // 级联选择器源数据
       goodsTypeData: [],
@@ -134,6 +140,7 @@ export default {
     ParamsTabs,
     AttrTabs,
     UploadImgTabs,
+    QuillEditorTabs
   },
   computed: {
     // 选择了三级分类数据
