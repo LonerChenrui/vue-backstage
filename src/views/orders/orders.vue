@@ -1,10 +1,10 @@
 <template>
   <div class="orders">
-    <!-- 商品列表面包屑 -->
+    <!-- 订单列表面包屑 -->
     <user-breadcrumb :breadcrumbTitle="breadcrumbTitle" />
     <!-- 卡片 -->
     <el-card>
-      <!-- 搜索、添加 -->
+      <!-- 搜索 -->
       <div>
         <el-row :gutter="20">
           <el-col :span="8">
@@ -14,26 +14,31 @@
           </el-col>
         </el-row>
       </div>
-      <!-- 商品列表 -->
+      <!-- 订单列表 -->
       <template>
         <el-table :data="goodsListData" stripe border>
           <el-table-column type="index" width="90"></el-table-column>
-          <el-table-column prop="goods_name" label="商品名称" show-overflow-tooltip width="150"></el-table-column>
-          <el-table-column prop="goods_price" label="商品价格（元）" width="120"></el-table-column>
-          <el-table-column prop="goods_weight" label="商品重量" width="100"></el-table-column>
-          <el-table-column prop="upd_time" label="创建时间">
+          <el-table-column prop="order_number" label="订单编号" show-overflow-tooltip width="150"></el-table-column>
+          <el-table-column prop="order_price" label="订单价格" width="120"></el-table-column>
+          <el-table-column label="是否付款" width="100">
             <template slot-scope="{row}">
-              <span>{{row.upd_time | dateFormat("YYYY-mm-dd HH:MM:SS")}}</span>
+              <el-tag type="warning" v-if="row.pay_status == '1'">已付款</el-tag>
+              <el-tag type="danger" v-else>未付款</el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="创建时间">
+          <el-table-column prop="is_send" label="是否发货"></el-table-column>
+          <el-table-column label="下单时间">
+            <template slot-scope="{row}">
+              <div>{{row.create_time | dateFormat( "YYYY-mm-dd HH:MM:SS")}}</div>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作">
             <template slot-scope="{row}">
               <el-button type="primary" icon="el-icon-edit" size="mini"></el-button>
               <el-button
-                type="danger"
-                icon="el-icon-delete"
+                type="success"
+                icon="el-icon-location-outline"
                 size="mini"
-                @click="deleteGoodsList(row.goods_id)"
               ></el-button>
             </template>
           </el-table-column>
@@ -58,11 +63,11 @@
 
 <script>
 import UserBreadcrumb from "@/components/content/breadcrumb/Breadcrumb";
-import { getGoodsList, deleteGoodsList } from "@/network/orders";
+import { getOrdersList } from "@/network/orders";
 export default {
   data() {
     return {
-      // 分类参数面包屑标题
+      // 订单列表面包屑标题
       breadcrumbTitle: ["订单管理", "订单列表"],
       // table源数据
       goodsListData: [],
@@ -80,67 +85,38 @@ export default {
     };
   },
   created() {
-    this.getGoodsList();
+    this.getOrdersList();
   },
   mounted() {},
   props: {},
   components: {
     UserBreadcrumb,
   },
-  computed: {
-    aa() {
-      return dateFormat("YYYY-mm-dd HH:MM:SS", new Date());
-    },
-  },
+  computed: {},
   watch: {},
   methods: {
-    // 获取商品列表
-    async getGoodsList() {
-      const res = await getGoodsList(this.queryInfo);
+    // 获取订单列表
+    async getOrdersList() {
+      const res = await getOrdersList(this.queryInfo);
       if (res.meta.status !== 200) {
         return this.$message.error(result.meta.msg);
       }
       this.goodsListData = res.data.goods;
       this.total = res.data.total;
-      // console.log(this.goodsListData);
     },
     // 每页显示多少条
     handleSizeChange(val) {
-      // console.log(`每页 ${val} 条`);
       this.queryInfo.pagesize = val;
-      this.getGoodsList();
+      this.getOrdersList();
     },
     // 当前页显示多少条
     handleCurrentChange(val) {
       this.queryInfo.pagenum = val;
-      this.getGoodsList();
+      this.getOrdersList();
     },
     // 搜索
     handleSerch() {
-      this.getGoodsList();
-    },
-    // 删除列表
-
-    deleteGoodsList(id) {
-      this.$confirm("确定删除?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(async () => {
-          const res = await deleteGoodsList(id);
-          if (res.meta.status !== 200) {
-            return this.$message.error(res.meta.msg);
-          }
-          this.getGoodsList();
-          this.$message.success(res.meta.msg);
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除",
-          });
-        });
+      this.getOrdersList();
     },
   },
 };

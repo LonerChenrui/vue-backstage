@@ -1,7 +1,7 @@
 // 自定义过滤器
 import Vue from 'vue'
 
-// 日期格式化
+// 日期格式化 使用方法：dateFormat( date,"YYYY-mm-dd HH:MM:SS")
 Vue.filter('dateFormat', function (dateValue, fmt) {
   let date = new Date(dateValue)
   let ret;

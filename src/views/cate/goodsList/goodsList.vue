@@ -29,7 +29,7 @@
               <span>{{row.upd_time | dateFormat("YYYY-mm-dd HH:MM:SS")}}</span>
             </template>
           </el-table-column>
-          <el-table-column label="创建时间">
+          <el-table-column label="操作">
             <template slot-scope="{row}">
               <el-button type="primary" icon="el-icon-edit" size="mini"></el-button>
               <el-button

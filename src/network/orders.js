@@ -1,18 +1,10 @@
 import Axios from './request'
 
-// 获取商品列表
-export function getGoodsList(payLoad) {
+// 获取订单列表
+export function getOrdersList(payLoad) {
   return Axios.request({
-    url: 'goods',
+    url: 'orders',
     method: 'get',
     params: payLoad
-  })
-}
-
-// 删除参数列表
-export function deleteGoodsList(id) {
-  return Axios.request({
-    url: `goods/${id}`,
-    method: 'delete',
   })
 }
