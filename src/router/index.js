@@ -13,6 +13,7 @@ const ClassifyParams = () => import('@/views/cate/classifyparams/classifyparams.
 const GoodsList = () => import('@/views/cate/goodsList/goodsList.vue')
 const AddGoodsList = () => import('@/views/cate/goodsList/addGoodsList.vue')
 const Orders = () => import('@/views/orders/orders')
+const Reports = () => import('@/views/reports/reports')
 
 
 const routes = [
@@ -40,6 +41,7 @@ const routes = [
       { path: '/goods', name: 'goods', component: GoodsList },
       { path: '/addgoodslist', name: 'addgoodslist', component: AddGoodsList },
       { path: '/orders', name: 'orders', component: Orders },
+      { path: '/reports', name: 'reports', component: Reports },
     ]
   }
 ]
