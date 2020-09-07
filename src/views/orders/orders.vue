@@ -121,6 +121,7 @@ export default {
   methods: {
     // 获取订单列表
     async getOrdersList() {
+      console.log('测试移除console');
       const res = await getOrdersList(this.queryInfo);
       if (res.meta.status !== 200) {
         return this.$message.error(result.meta.msg);
