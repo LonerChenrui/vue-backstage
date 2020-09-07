@@ -33,12 +33,18 @@
             </template>
           </el-table-column>
           <el-table-column label="操作">
-            <template slot-scope="{row}">
-              <el-button type="primary" icon="el-icon-edit" size="mini"></el-button>
+            <template>
+              <el-button
+                type="primary"
+                icon="el-icon-edit"
+                size="mini"
+                @click="dialogVisible('edit')"
+              ></el-button>
               <el-button
                 type="success"
                 icon="el-icon-location-outline"
                 size="mini"
+                @click="dialogVisible('location')"
               ></el-button>
             </template>
           </el-table-column>
@@ -57,13 +63,24 @@
           :total="total"
         ></el-pagination>
       </div>
+
+      <!-- 弹框 -->
+      <OrdersDialog
+        :ordersDialogVisible="ordersDialogVisible"
+        @cancel="ordersDialogVisible = false"
+        :title="title"
+        :locaTionOutlineData="locaTionOutlineData"
+      />
     </el-card>
   </div>
 </template>
 
 <script>
 import UserBreadcrumb from "@/components/content/breadcrumb/Breadcrumb";
-import { getOrdersList } from "@/network/orders";
+
+import OrdersDialog from "./children/ordersDialog";
+
+import { getOrdersList, getLocaTionOutlineInfo } from "@/network/orders";
 export default {
   data() {
     return {
@@ -82,6 +99,12 @@ export default {
       },
       // 总条数
       total: 0,
+      // 弹框状态
+      ordersDialogVisible: false,
+      // 弹框标题
+      title: "",
+      // 物流信息数据
+      locaTionOutlineData: []
     };
   },
   created() {
@@ -91,6 +114,7 @@ export default {
   props: {},
   components: {
     UserBreadcrumb,
+    OrdersDialog,
   },
   computed: {},
   watch: {},
@@ -117,6 +141,27 @@ export default {
     // 搜索
     handleSerch() {
       this.getOrdersList();
+    },
+
+    // 获取物流信息
+    async getLocaTionOutlineInfo() {
+      const res = await getLocaTionOutlineInfo();
+      if (res.meta.status !== 200) {
+        return this.$message.error(result.meta.msg);
+      }
+      this.locaTionOutlineData = res.data
+    },
+    // 弹框操作：修改地址、查看物流
+    dialogVisible(flge) {
+      if (flge == "edit") {
+        // 修改地址
+        this.title = "修改地址";
+      } else {
+        // 查看物流进度
+        this.title = "查看物流进度";
+        this.getLocaTionOutlineInfo();
+      }
+      this.ordersDialogVisible = true;
     },
   },
 };

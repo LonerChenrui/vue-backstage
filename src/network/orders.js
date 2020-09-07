@@ -8,3 +8,12 @@ export function getOrdersList(payLoad) {
     params: payLoad
   })
 }
+// 获取物理信息
+export function getLocaTionOutlineInfo() {
+  return Axios.request({
+    url: '/kuaidi/1106975712662',
+    method: 'get',
+  })
+}
+
+

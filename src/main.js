@@ -26,6 +26,11 @@ import 'quill/dist/quill.bubble.css'
 
 Vue.use(VueQuillEditor, /* { default global options } */)
 
+// 省市县三级联动
+import Distpicker from 'v-distpicker'
+Vue.component('v-distpicker', Distpicker)
+
+
 Vue.config.productionTip = false
 
 new Vue({
