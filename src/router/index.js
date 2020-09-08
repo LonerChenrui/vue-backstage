@@ -2,6 +2,12 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
+// 页面头部加载进度条
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
+
+
+
 const Login = () => import('@/views/login/Login.vue')
 const Home = () => import('@/views/home/Home.vue')
 const HomeMain = () => import('@/views/home/children/HomeMain.vue')
@@ -51,12 +57,17 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
-
+console.log(router)
 // 问题收集
 // 通过导航守卫控制访问权限（全局导航守卫、路由独享守卫、组件内守卫）
 // 如果用户没有登录，是通过URL访问指定页面，需要重新导航到登录页
 
+
+// 路由跳转前调用 router.beforeEach() 一般用于登录验证
 router.beforeEach((to, from, next) => {
+  // 进入页面之前在页面头部加载进度条
+  NProgress.start()
+
   // 如果用户访问的是登录页，就直接放行
   if (to.path === '/login') return next();
   // 如果用户访问的不是登录页 并且没有进行登录，就直接导航到登录页
@@ -65,6 +76,14 @@ router.beforeEach((to, from, next) => {
     router.push('/login')
   }
   next()
+});
+
+// 路由跳转完成调用 router.afterEach()
+router.afterEach(() => {
+  // 关闭进度条
+  NProgress.done()
 })
+
+
 
 export default router
