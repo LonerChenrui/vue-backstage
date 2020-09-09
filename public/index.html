@@ -1,14 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <title>backstage</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
-  </body>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title><%= htmlWebpackPlugin.options.isProd ? '' : 'dev - ' %>电商后台管理系统</title>
+  <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+  
+  <!-- css -->
+  <% if(htmlWebpackPlugin.options.isProd){ %>
+  <!-- nprogress -->
+  <link rel="icon" href="https://unpkg.com/nprogress@0.2.0/nprogress.css">
+  <!-- 富文本 -->
+  <link rel="stylesheet" href="path/to/quill.core.css" />
+  <link rel="stylesheet" href="path/to/quill.snow.css" />
+  <link rel="stylesheet" href="path/to/quill.bubble.css" />
+  <!-- element -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <!-- 动画 animate -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  <!-- js -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="echarts.min.js"></script>
+  <script src="https://unpkg.com/nprogress@0.2.0/nprogress.js"></script>
+  <!-- 富文本 -->
+  <script type="text/javascript" src="path/to/quill.js"></script>
+  <script type="text/javascript" src="path/to/dist/vue-quill-editor.js"></script>
+  <% } %>
+</head>
+
+<body>
+  <div id="app"></div>
+  <!-- built files will be auto injected -->
+</body>
+
 </html>
