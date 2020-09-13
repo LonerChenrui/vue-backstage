@@ -1,4 +1,16 @@
 module.exports = {
+  // 1. 可以设置部署应用包的基本url
+  // publicPath: '',
+
+  // 2. 去除dist文件夹中被打包出来的.map文件，减少包体积大小.
+  // .map文件的作用是，在项目运行报错时，可以准确的输出哪一行哪一列有错
+  productionSourceMap: false,
+
+  // 3. assetsDir 放置生成的静态资源 (js、css、img、fonts) 的目录，默认是''。
+  // assetsDir: '',
+
+  
+
   configureWebpack: {
     resolve: {
       // 配置路径别名
