@@ -9,7 +9,8 @@ module.exports = {
   // 3. assetsDir 放置生成的静态资源 (js、css、img、fonts) 的目录，默认是''。
   // assetsDir: '',
 
-  
+  // 指定生成的 index.html 的输出路径，默认是index.html。个人理解为是将打包出来的默认index.html文件名修改成自己定义的文件名。
+  // indexPath: '自定义名称 如： loner.html', 
 
   configureWebpack: {
     resolve: {
