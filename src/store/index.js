@@ -20,6 +20,9 @@ export default new Vuex.Store({
       state.numState = state.numState * 2;
 
       state.noState = state.noState * 2;
+    },
+    vModul(state,val) {
+      state.noState = val
     }
   },
   actions: {
