@@ -1,8 +1,8 @@
 
 
 // 区分生产环境和开发环境
-// process.env.NODE_ENV === 'development'   生产环境
-// process.env.NODE_ENV === 'production'  开发环境
+// process.env.NODE_ENV === 'development'   开发环境
+// process.env.NODE_ENV === 'production'  生产环境
 
 module.exports = {
   // 1. 可以设置部署应用包的基本url
